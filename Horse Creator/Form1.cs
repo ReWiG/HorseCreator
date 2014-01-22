@@ -100,5 +100,10 @@ namespace Horse_Creator
 
             pictureBox1.Image = Image;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
