@@ -15,9 +15,11 @@ namespace Horse_Creator
 {
     public partial class Form1 : Form
     {
+        DbManager DbMan = new DbManager();
+
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -42,7 +44,7 @@ namespace Horse_Creator
             sqlCommand.CommandType = CommandType.Text;
  
             //Текст запроса
-            sqlCommand.CommandText = "INSERT INTO Horse (horseName, horseImage) VALUES ('Название2', @Kartinka);";
+            sqlCommand.CommandText = "INSERT INTO Horse (horseName, horseImage) VALUES ('Название2', @Kartinka); SELECT CAST(scope_identity() AS int);";
  
             //Параметр @Kartinka - наш массив байтов
             sqlCommand.Parameters.Add("@Kartinka", DbType.Binary, buffer.Length).Value = buffer;
@@ -82,7 +84,7 @@ namespace Horse_Creator
             sqlConnection.Open();
 
             //Выполняем запрос на чтение
-            byte[] ImageBytes = (byte[])sqlCommand.ExecuteScalar();
+            byte[] ImageBytes = (byte[])sqlCommand.ExecuteScalar(); // ОБРАБОТАТЬ ИСКЛЮЧЕНИЕ!!!
 
             //Завершаем выполнение команды
             sqlCommand.Cancel();
@@ -104,6 +106,31 @@ namespace Horse_Creator
         private void button1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // Открытие картинки
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textBox2.Text = openFileDialog1.FileName;
+            }
+        }
+
+        // Добавление породы
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if(DbMan.InsertHorse(textBox1.Text, richTextBox1.Text) > 0)
+            {
+                // Активируем элементы
+                comboBox1.Enabled = true; 
+                comboBox2.Enabled = true;
+                textBox2.Enabled = true;
+                button5.Enabled = true;
+                button6.Enabled = true;
+
+                comboBox1.Items.AddRange(DbMan.SelectHorseName());
+            }
         }
     }
 }
