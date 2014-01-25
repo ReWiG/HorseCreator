@@ -19,49 +19,18 @@ namespace Horse_Creator
 
         public Form1()
         {
-            InitializeComponent();            
-        }
+            InitializeComponent();
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            long totalBytes;
-            byte[] buffer;
-            using (FileStream stream = new FileStream("2r.png", FileMode.Open, FileAccess.Read))
+            object[] horseName = DbMan.SelectHorseNames();
+
+            if (horseName != null && horseName.Length != 0)
             {
-	            BinaryReader br = new BinaryReader(stream);
+                ActivateItemsAdded();
 
-                totalBytes = new FileInfo("2r.png").Length;
-	            buffer = br.ReadBytes((Int32)totalBytes);
-	            stream.Close();
-	            br.Close();
+                comboBox1.Items.Clear();
+                comboBox1.Items.AddRange(horseName);
+                comboBox1.Text = comboBox1.Items[0].ToString();
             }
-
-            SQLiteConnection conn = new SQLiteConnection(@"Data Source=horse.db");
-
-            //Подготовим запрос к базе на сохранение
-            SQLiteCommand sqlCommand = new SQLiteCommand();
-            sqlCommand.Connection = conn;
-            sqlCommand.CommandType = CommandType.Text;
- 
-            //Текст запроса
-            sqlCommand.CommandText = "INSERT INTO Horse (horseName, horseImage) VALUES ('Название2', @Kartinka); SELECT CAST(scope_identity() AS int);";
- 
-            //Параметр @Kartinka - наш массив байтов
-            sqlCommand.Parameters.Add("@Kartinka", DbType.Binary, buffer.Length).Value = buffer;
- 
-            //Открываем соединение с базой данных
-            conn.Open();
- 
-            //Выполняем запрос на запись
-            //и получаем уникальный идентификатор картинки
-            int intID = Convert.ToInt32(sqlCommand.ExecuteScalar());
- 
-            //Завершаем выполнение команды
-            sqlCommand.Cancel();
- 
-            //Закрываем соединение с базой данных
-            conn.Close();
-            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -105,7 +74,7 @@ namespace Horse_Creator
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            // Обновление
         }
 
         // Открытие картинки
@@ -120,16 +89,61 @@ namespace Horse_Creator
         // Добавление породы
         private void button4_Click(object sender, EventArgs e)
         {
-            if(DbMan.InsertHorse(textBox1.Text, richTextBox1.Text) > 0)
+            if (textBox1.Text != "")
             {
-                // Активируем элементы
-                comboBox1.Enabled = true; 
-                comboBox2.Enabled = true;
-                textBox2.Enabled = true;
-                button5.Enabled = true;
-                button6.Enabled = true;
+                if (DbMan.InsertHorse(textBox1.Text, richTextBox1.Text) > 0)
+                {
+                    object[] obj = DbMan.SelectHorseNames();
+                    if (obj != null && obj.Length != 0)
+                    {
+                        ActivateItemsAdded();
 
-                comboBox1.Items.AddRange(DbMan.SelectHorseName());
+                        comboBox1.Items.Clear();
+
+                        comboBox1.Items.AddRange(obj);
+                        comboBox1.Text = comboBox1.Items[0].ToString();
+                        comboBox1.DroppedDown = true;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка БД!");
+                    Environment.Exit(0);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Вы не ввели название породы, повторите попытку");
+            }
+        }
+
+        // Активируем элементы добавления картинок
+        private void ActivateItemsAdded()
+        {
+            comboBox1.Enabled = true;
+            comboBox2.Enabled = true;
+            textBox2.Enabled = true;
+            button5.Enabled = true;
+            button6.Enabled = true;
+        }
+
+        // Добавление картинок в базу
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if(comboBox1.Text != "" && textBox2.Text != "" && comboBox2.Text != "")
+            {
+                if (DbMan.InsertImage(comboBox1.Text, textBox2.Text, comboBox2.Text) > 0)
+                {
+                    MessageBox.Show("Изображение добавлено!");
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка добавления, проверьте правильность ввода.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Не все поля заполнены!");
             }
         }
     }
