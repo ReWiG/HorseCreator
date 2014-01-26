@@ -32,7 +32,6 @@ namespace Horse_Creator
                 comboBox1.Text = comboBox1.Items[0].ToString();
                 comboBox3.Items.Clear();
                 comboBox3.Items.AddRange(horseName);
-                comboBox3.Text = comboBox1.Items[0].ToString();
             }
         }
 
@@ -68,7 +67,6 @@ namespace Horse_Creator
                         comboBox1.DroppedDown = true;
                         comboBox3.Items.Clear();
                         comboBox3.Items.AddRange(obj);
-                        comboBox3.Text = comboBox1.Items[0].ToString();
                     }
                 }
                 else
@@ -88,6 +86,7 @@ namespace Horse_Creator
         {
             comboBox1.Enabled = true;
             comboBox2.Enabled = true;
+            comboBox3.Enabled = true;
             textBox2.Enabled = true;
             button5.Enabled = true;
             button6.Enabled = true;
