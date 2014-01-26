@@ -30,46 +30,10 @@ namespace Horse_Creator
                 comboBox1.Items.Clear();
                 comboBox1.Items.AddRange(horseName);
                 comboBox1.Text = comboBox1.Items[0].ToString();
+                comboBox3.Items.Clear();
+                comboBox3.Items.AddRange(horseName);
+                comboBox3.Text = comboBox1.Items[0].ToString();
             }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            //Подготовим соединение с базой данных
-            SQLiteConnection sqlConnection = new SQLiteConnection(@"Data Source=horse.db");
-
-            //Подготовим запрос к базе на сохранение
-            SQLiteCommand sqlCommand = new SQLiteCommand();
-            sqlCommand.Connection = sqlConnection;
-            sqlCommand.CommandType = CommandType.Text;
-
-            //Текст запроса
-            sqlCommand.CommandText = "SELECT horseImage FROM horse WHERE id = @imageID";
-
-            //Параметр @imageID - наш идентификатор
-            sqlCommand.Parameters.Add("@imageID", DbType.Int32).Value = 1;
-
-            //Открываем соединение с базой данных
-            sqlConnection.Open();
-
-            //Выполняем запрос на чтение
-            byte[] ImageBytes = (byte[])sqlCommand.ExecuteScalar(); // ОБРАБОТАТЬ ИСКЛЮЧЕНИЕ!!!
-
-            //Завершаем выполнение команды
-            sqlCommand.Cancel();
-
-            //Закрываем соединение с базой данных
-            sqlConnection.Close();
-
-            MemoryStream ImageStream = new MemoryStream(ImageBytes);
-
-            //Создадим изображение из потока
-            Image Image = Image.FromStream(ImageStream);
-
-            //Закроем поток
-            ImageStream.Close();
-
-            pictureBox1.Image = Image;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -99,10 +63,12 @@ namespace Horse_Creator
                         ActivateItemsAdded();
 
                         comboBox1.Items.Clear();
-
                         comboBox1.Items.AddRange(obj);
                         comboBox1.Text = comboBox1.Items[0].ToString();
                         comboBox1.DroppedDown = true;
+                        comboBox3.Items.Clear();
+                        comboBox3.Items.AddRange(obj);
+                        comboBox3.Text = comboBox1.Items[0].ToString();
                     }
                 }
                 else
@@ -145,6 +111,11 @@ namespace Horse_Creator
             {
                 MessageBox.Show("Не все поля заполнены!");
             }
+        }
+
+        private void comboBox3_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            pictureBox1.Image = DbMan.SelectImageColor(comboBox3.SelectedItem.ToString());
         }
     }
 }
