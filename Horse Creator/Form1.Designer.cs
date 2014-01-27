@@ -61,11 +61,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(702, 302);
+            this.button1.Location = new System.Drawing.Point(702, 294);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(77, 40);
+            this.button1.Size = new System.Drawing.Size(77, 48);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Обновить программу";
+            this.button1.Text = "Проверить обновление программы";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 

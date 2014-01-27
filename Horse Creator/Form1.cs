@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Data.SQLite;
+using System.Net;
 
 namespace Horse_Creator
 {
@@ -35,9 +36,32 @@ namespace Horse_Creator
             }
         }
 
+        // Проверка обновления
         private void button1_Click(object sender, EventArgs e)
         {
-            // Обновление
+            try
+            {
+                WebClient web = new WebClient();
+                web.DownloadFile(Properties.Settings.Default.updateUrl + "upd/ver.txt", "ver.txt"); // Качаем файл и сохраняем локально
+                String[] lines = File.ReadAllLines("ver.txt");
+                File.Delete("ver.txt"); // Удаляем локальную копию
+
+                if(lines[0] == Application.ProductVersion) {
+                    MessageBox.Show("Обновления отсутствуют!");
+                }
+                else
+                {
+                    if(MessageBox.Show("Доступна новая версия! Выполнить обновление?",
+                        "Доступно обновление", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+
+                    }
+                }
+            }
+            catch
+            {     // Если номер версии не можем получить,
+                MessageBox.Show("Невозможно проверить обновление!");
+            }
         }
 
         // Открытие картинки

@@ -25,12 +25,10 @@ namespace Horse_Creator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\v11.0;AttachDbFilename=|DataDirectory|\\horsedb.mdf;Integrat" +
-            "ed Security=True;Connect Timeout=30")]
-        public string horsedbConn {
+        [global::System.Configuration.DefaultSettingValueAttribute("http://lolperl.zz.mu/")]
+        public string updateUrl {
             get {
-                return ((string)(this["horsedbConn"]));
+                return ((string)(this["updateUrl"]));
             }
         }
     }
