@@ -43,10 +43,11 @@ namespace Horse_Creator
             {
                 WebClient web = new WebClient();
                 web.DownloadFile(Properties.Settings.Default.updateUrl + "upd/ver.txt", "ver.txt"); // Качаем файл и сохраняем локально
-                String[] lines = File.ReadAllLines("ver.txt");
+                String[] fileHashes = File.ReadAllLines("ver.txt");
                 File.Delete("ver.txt"); // Удаляем локальную копию
 
-                if(lines[0] == Application.ProductVersion) {
+                if (fileHashes[0] == Application.ProductVersion)
+                {
                     MessageBox.Show("Обновления отсутствуют!");
                 }
                 else
@@ -55,6 +56,7 @@ namespace Horse_Creator
                         "Доступно обновление", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         this.Hide();
+                        
                         FormUpdater upd = new FormUpdater();
                         upd.Show(this);                        
                     }

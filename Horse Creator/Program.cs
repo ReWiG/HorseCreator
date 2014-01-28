@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Horse_Creator
@@ -14,6 +12,8 @@ namespace Horse_Creator
         [STAThread]
         static void Main()
         {
+            
+            Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

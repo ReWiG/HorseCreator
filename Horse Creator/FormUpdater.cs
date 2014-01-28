@@ -24,20 +24,20 @@ namespace Horse_Creator
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
 
                 // Начинаем скачивание
-                webClient.DownloadFileAsync(new Uri(url_program), up_filename);
+                //webClient.DownloadFileAsync(new Uri(url_program), up_filename);
             }
             catch (Exception ex)
             {  // В случае ошибки выводим сообщение и предлагаем скачать вручную
-                error(ex.Message + " " + filename);
+                //error(ex.Message + " " + filename);
             }
         }
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            progress_download.Value = e.ProgressPercentage;
+            progressBar1.Value = e.ProgressPercentage;
         }
-        private void Completed(object sender, AsyncCompletedEventArgs e)
+        public void Completed(object sender, AsyncCompletedEventArgs e)
         {
-            run_program(up_filename, "/u \"" + my_filename + "\"");
+           // run_program(up_filename, "/u \"" + my_filename + "\"");
             this.Close();
         }
     }
