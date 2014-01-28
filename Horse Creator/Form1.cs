@@ -54,7 +54,9 @@ namespace Horse_Creator
                     if(MessageBox.Show("Доступна новая версия! Выполнить обновление?",
                         "Доступно обновление", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-
+                        this.Hide();
+                        FormUpdater upd = new FormUpdater();
+                        upd.Show(this);                        
                     }
                 }
             }
