@@ -47,6 +47,7 @@
             this.progressBar2.Location = new System.Drawing.Point(12, 85);
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(308, 23);
+            this.progressBar2.Step = 1;
             this.progressBar2.TabIndex = 1;
             // 
             // label1
@@ -70,7 +71,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(99, 18);
+            this.label3.Location = new System.Drawing.Point(93, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(0, 13);
             this.label3.TabIndex = 4;
