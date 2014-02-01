@@ -41,8 +41,11 @@ namespace Horse_Creator
         {
             try
             {
+                // Качаем файл, сохраняем локально
                 WebClient web = new WebClient();
-                web.DownloadFile(Properties.Settings.Default.updateUrl + "upd/ver.txt", "ver.txt"); // Качаем файл и сохраняем локально
+                web.DownloadFile(Properties.Settings.Default.updateUrl + "upd/ver.txt", "ver.txt");
+
+                // Читаем первую строку
                 String[] fileHashes = File.ReadAllLines("ver.txt");
                 File.Delete("ver.txt"); // Удаляем локальную копию
                 
@@ -55,16 +58,15 @@ namespace Horse_Creator
                     if(MessageBox.Show("Доступна новая версия! Выполнить обновление?",
                         "Доступно обновление", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        this.Hide();
-                        
-                        FormUpdater upd = new FormUpdater();
-                        upd.Show(this);                        
+                        FormUpdater upd = new FormUpdater(fileHashes);
+                        upd.ShowDialog(this);
+
                     }
                 }
             }
-            catch
+            catch (Exception ee)
             {     // Если номер версии не можем получить,
-                MessageBox.Show("Невозможно проверить обновление!");
+                MessageBox.Show("Невозможно проверить обновление!" + ee);
             }
         }
 
