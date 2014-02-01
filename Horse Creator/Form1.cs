@@ -45,7 +45,7 @@ namespace Horse_Creator
                 web.DownloadFile(Properties.Settings.Default.updateUrl + "upd/ver.txt", "ver.txt"); // Качаем файл и сохраняем локально
                 String[] fileHashes = File.ReadAllLines("ver.txt");
                 File.Delete("ver.txt"); // Удаляем локальную копию
-
+                
                 if (fileHashes[0] == Application.ProductVersion)
                 {
                     MessageBox.Show("Обновления отсутствуют!");
