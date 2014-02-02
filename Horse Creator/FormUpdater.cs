@@ -14,68 +14,90 @@ namespace Horse_Creator
 {
     public partial class FormUpdater : Form
     {
+        List<String> filesToUpdate;
+        String programName;
+
         public FormUpdater(String[] fileHashes)
         {
             InitializeComponent();
 
-            List<String> filesToUpdate = new List<string>();
+            filesToUpdate = new List<string>(); // Список файлов для загрузки
+            programName = "new." + fileHashes[1].Trim().Split('|')[0]; // Имя обновлённой программы
 
+            // В цикле разделяем названия файлов и хэши, проверяем хэши
             for (int i = 1; i < fileHashes.Length; i++)
             {
-                string[] arrFile_Hash = fileHashes[i].Trim().Split('|');
+                string[] arrFile_Hash = fileHashes[i].Trim().Split('|'); // Разделяем
 
+                // Проверяем наличие файлов и хэши
                 if (!File.Exists(arrFile_Hash[0]) ||
                     ComputeMD5Checksum(arrFile_Hash[0]) != arrFile_Hash[1])
                 {
-                    filesToUpdate.Add(arrFile_Hash[0]);
+                    filesToUpdate.Add(arrFile_Hash[0]); // Добавляем файл в список для загрузки
                 }
             }
             if (filesToUpdate.Count != 0)
             {
-                File.WriteAllLines("FileToUpdate.txt", filesToUpdate);
+                File.WriteAllLines("FileToUpdate.txt", filesToUpdate); // Записываем файл с именами файлов
 
-                using (WebClient webClient = new WebClient())
-                {
-                    // Создаём обработчики событий продвижения прогресса и его окончания
-                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+                progressBar2.Maximum = filesToUpdate.Count; // Задаем максимальное значение общего прогрессбара
 
-                    try
-                    {
-                        progressBar2.Maximum = filesToUpdate.Count;
-                        foreach (var item in filesToUpdate)
-                        {
-                            label3.Text = item; // Указываем тукущий скачиваемый файл
-
-                            // А если файла нет на сервере? Если файл скачался неправильно?
-
-                            // Начинаем скачивание
-                            webClient.DownloadFileAsync(new Uri(Properties.Settings.Default.updateUrl +
-                                "upd/" + item), "new." + item);
-
-                            progressBar2.PerformStep();
-                        }
-                    }
-                    catch(WebException e)
-                    {
-                        MessageBox.Show("Ошибка загрузки файлов, повторите попытку чуть позже."+ e);
-                        Application.Exit();
-                    }
-                }
+                DownloadFile(); // Начинаем рекурсивную загрузку
             }
             else
             {
                 MessageBox.Show("Нет файлов для обновления О_о. Сообщите разработчику");
             }
         }
+
+        // Рекурсивный метод для последовательной загрузки файлов
+        private void DownloadFile()
+        {
+            if (filesToUpdate.Count != 0)
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    // Создаём обработчики событий продвижения прогресса и его окончания
+                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+
+                    // Если файл скачался неправильно?
+
+                        // Начинаем скачивание
+                    webClient.DownloadFileAsync(new Uri(Properties.Settings.Default.updateUrl +
+                            "upd/" + filesToUpdate[0]), "new." + filesToUpdate[0]);
+                    
+                    label3.Text = filesToUpdate[0]; // Указываем тукущий скачиваемый файл
+
+                    progressBar2.PerformStep();
+
+                    filesToUpdate.RemoveAt(0); // Удаляем скачанный элемент
+
+                }
+            }
+            else
+            {
+                run_program(programName, "/u"); // Запускаем обновленную программу
+                Environment.Exit(0);
+            }
+        }
+
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
         }
         public void Completed(object sender, AsyncCompletedEventArgs e)
         {
-            // run_program(up_filename, "/u \"" + my_filename + "\"");
-            this.Dispose();
+            if (e.Error != null)
+            {
+                MessageBox.Show("Ошибка загрузки файлов, повторите попытку чуть позже. " + e.Error.Message);
+                this.Close();
+                this.Dispose();
+            }
+            else
+            {
+                DownloadFile();
+            }
         }
 
         /// <summary>
@@ -94,6 +116,27 @@ namespace Horse_Creator
                 string result = BitConverter.ToString(checkSum).Replace("-", String.Empty);
                 return result;
             }
+        }
+
+        private void run_program(string filename, string keys)
+        {
+            try
+            {   // Использование системных методов для запуска программы
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.WorkingDirectory = Application.StartupPath;
+                proc.StartInfo.FileName = filename;
+                proc.StartInfo.Arguments = keys; // Аргументы командной строки
+                proc.Start(); // Запускаем!
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Невозможно запустить обновлённую программу!" + ex);
+            }
+        }
+
+        private void FormUpdater_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
         }
     }
 }
