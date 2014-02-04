@@ -51,6 +51,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.label7 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -61,9 +63,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(702, 294);
+            this.button1.Location = new System.Drawing.Point(702, 9);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(77, 48);
+            this.button1.Size = new System.Drawing.Size(77, 51);
             this.button1.TabIndex = 0;
             this.button1.Text = "Проверить обновление программы";
             this.button1.UseVisualStyleBackColor = true;
@@ -74,10 +76,10 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(51, 72);
+            this.pictureBox1.Location = new System.Drawing.Point(6, 54);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(436, 226);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.Size = new System.Drawing.Size(481, 244);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
@@ -86,8 +88,8 @@
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -146,7 +148,7 @@
             this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(454, 49);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(110, 21);
+            this.button5.Size = new System.Drawing.Size(75, 21);
             this.button5.TabIndex = 9;
             this.button5.Text = "Открыть";
             this.button5.UseVisualStyleBackColor = true;
@@ -264,6 +266,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.comboBox3);
             this.tabPage1.Controls.Add(this.pictureBox1);
@@ -302,11 +305,31 @@
             this.openFileDialog1.Filter = "PNG изображения|*.png";
             this.openFileDialog1.Title = "Добавить картинку PNG";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(702, 88);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(35, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "label7";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(578, 246);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Сохранить";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(791, 354);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
@@ -321,6 +344,7 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -349,6 +373,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button2;
     }
 }
 

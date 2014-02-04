@@ -77,7 +77,7 @@ namespace Horse_Creator
             }
             else
             {
-                run_program(programName, "/u"); // Запускаем обновленную программу
+                Program.run_program(programName, "/u"); // Запускаем обновленную программу
                 Environment.Exit(0);
             }
         }
@@ -115,22 +115,6 @@ namespace Horse_Creator
                 byte[] checkSum = md5.ComputeHash(fileData);
                 string result = BitConverter.ToString(checkSum).Replace("-", String.Empty);
                 return result;
-            }
-        }
-
-        private void run_program(string filename, string keys)
-        {
-            try
-            {   // Использование системных методов для запуска программы
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo.WorkingDirectory = Application.StartupPath;
-                proc.StartInfo.FileName = filename;
-                proc.StartInfo.Arguments = keys; // Аргументы командной строки
-                proc.Start(); // Запускаем!
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Невозможно запустить обновлённую программу!" + ex);
             }
         }
 

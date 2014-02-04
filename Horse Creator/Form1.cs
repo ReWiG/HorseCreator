@@ -17,10 +17,13 @@ namespace Horse_Creator
     public partial class Form1 : Form
     {
         DbManager DbMan = new DbManager();
+        Image img;
 
         public Form1()
         {
             InitializeComponent();
+
+            label7.Text = "Версия " + Application.ProductVersion;
 
             object[] horseName = DbMan.SelectHorseNames();
 
@@ -144,7 +147,20 @@ namespace Horse_Creator
 
         private void comboBox3_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            pictureBox1.Image = DbMan.SelectImageColor(comboBox3.SelectedItem.ToString());
+            // Создаем новый image нужного размера (это будет объединенный image)
+            img = DbMan.SelectImageColor(comboBox3.SelectedItem.ToString());
+            pictureBox1.Image = img;
+            
+            
+            // Делаем этот image нашим контекстом, куда будем рисовать
+            Graphics g = Graphics.FromImage(img);
+            // рисуем существующие маленькие image в созданный нами большой image
+            g.DrawImage(Image.FromFile("1r4.png"), new Point(0,0));
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            img.Save("output.png", ImageFormat.Png);
         }
     }
 }

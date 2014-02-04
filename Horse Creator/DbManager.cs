@@ -203,7 +203,7 @@ namespace Horse_Creator
                 connect.Open();
 
                 //Выполняем запрос на чтение
-                byte[] ImageBytes = (byte[])sqlCommand.ExecuteScalar(); // ОБРАБОТАТЬ ИСКЛЮЧЕНИЕ!!!
+                byte[] ImageBytes = (byte[])sqlCommand.ExecuteScalar();
 
                 //Завершаем выполнение команды
                 sqlCommand.Cancel();
@@ -211,10 +211,17 @@ namespace Horse_Creator
                 //Закрываем соединение с базой данных
                 connect.Close();
 
-                using (MemoryStream ImageStream = new MemoryStream(ImageBytes))
+                if (ImageBytes != null)
                 {
-                    //Создадим изображение из потока
-                    return Image.FromStream(ImageStream);
+                    using (MemoryStream ImageStream = new MemoryStream(ImageBytes))
+                    {
+                        //Создадим изображение из потока
+                        return Image.FromStream(ImageStream);
+                    }
+                }
+                else
+                {
+                    return null; // Если нет картинки в базе
                 }
             }
             catch (SQLiteException e)
