@@ -16,8 +16,10 @@ namespace Horse_Creator
 {
     public partial class Form1 : Form
     {
-        DbManager DbMan = new DbManager();
-        Image img;
+        DbManager DbMan = new DbManager(); // Менеджер базы данных
+        Image imgHorse; // Картинка текущей выбранной лошади(тело)
+        List<Image> maneImage; // Список с изображениями грив лошади
+        List<Image> tailImage; // Список с изображениями хвостов лошади
 
         public Form1()
         {
@@ -148,19 +150,53 @@ namespace Horse_Creator
         private void comboBox3_SelectionChangeCommitted(object sender, EventArgs e)
         {
             // Создаем новый image нужного размера (это будет объединенный image)
-            img = DbMan.SelectImageColor(comboBox3.SelectedItem.ToString());
-            pictureBox1.Image = img;
-            
-            
-            // Делаем этот image нашим контекстом, куда будем рисовать
-            Graphics g = Graphics.FromImage(img);
-            // рисуем существующие маленькие image в созданный нами большой image
-            g.DrawImage(Image.FromFile("1r4.png"), new Point(0,0));
+            imgHorse = DbMan.SelectImageColor(comboBox3.SelectedItem.ToString());
+
+            // Проверяем, есть ли картинка 
+            if (imgHorse != null)
+            {
+                pictureBox1.Image = imgHorse;
+
+                // Делаем этот image нашим контекстом, куда будем рисовать
+                Graphics g = Graphics.FromImage(imgHorse);
+
+                maneImage = DbMan.SelectImageManeOrTail(comboBox3.SelectedItem.ToString(), "mane");
+                tailImage = DbMan.SelectImageManeOrTail(comboBox3.SelectedItem.ToString(), "tail");
+
+                if ((maneImage != null) && (maneImage.Count != 0))
+                {
+                    // добавляем image
+                    g.DrawImage(maneImage[0], new Point(0, 0));
+                }
+
+                if ((tailImage != null) && (tailImage.Count != 0))
+                {
+                    // добавляем image
+                    g.DrawImage(tailImage[0], new Point(0, 0));
+                }
+
+                
+
+
+                
+                
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            img.Save("output.png", ImageFormat.Png);
+            // Сохранение картинки в файл
+            Stream myStream;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if ((myStream = saveFileDialog1.OpenFile()) != null)
+                {
+                    imgHorse.Save(myStream, ImageFormat.Png);
+                    // Code to write the stream goes here.
+                    myStream.Close();
+                }
+            }
+            
         }
     }
 }

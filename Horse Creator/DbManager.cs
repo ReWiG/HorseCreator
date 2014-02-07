@@ -18,7 +18,7 @@ namespace Horse_Creator
         /// </summary>
         /// <param name="Name">Название породы</param>
         /// <param name="Desc">Описание породы</param>
-        /// <returns>ID добавленной записи</returns>
+        /// <returns>ID добавленной записи или -1 в случае ошибки</returns>
         public Int32 InsertHorse(String Name, String Desc)
         {
             try
@@ -188,7 +188,7 @@ namespace Horse_Creator
         /// Получает картинку тела лошади
         /// </summary>
         /// <param name="horseName">Имя лошади</param>
-        /// <returns>Картинка тела</returns>
+        /// <returns>Картинка тела или null в случае ошибки</returns>
         public Image SelectImageColor(String horseName)
         {
             try
@@ -236,7 +236,13 @@ namespace Horse_Creator
             }
         }
 
-        public List<Image> SelectImageMane(String horseName)
+        /// <summary>
+        /// Получает из БД списки с изображениями хвостов или грив, в зависимости от параметра option
+        /// </summary>
+        /// <param name="horseName">Имя лошади</param>
+        /// <param name="option">"mane" или "tail"</param>
+        /// <returns>List с изображениями или null в случае ошибки</returns>
+        public List<Image> SelectImageManeOrTail(String horseName, String option)
         {
             try
             {
@@ -246,8 +252,17 @@ namespace Horse_Creator
                 sqlCommand.CommandType = CommandType.Text;
 
                 //Текст запроса
-                sqlCommand.CommandText = "SELECT maneImg FROM horseManeImg WHERE fkHorse = (SELECT horseId FROM horse WHERE horseName = @horseName);";
-
+                switch(option){
+                    case "mane":
+                        sqlCommand.CommandText = "SELECT maneImg FROM horseManeImg WHERE fkHorse = (SELECT horseId FROM horse WHERE horseName = @horseName);";
+                        break;
+                    case "tail":
+                        sqlCommand.CommandText = "SELECT tailImg FROM horseTailImg WHERE fkHorse = (SELECT horseId FROM horse WHERE horseName = @horseName);";
+                        break;
+                    default:
+                        System.Windows.Forms.MessageBox.Show("Неверный тип атрибутов(картинок)");
+                        return null;
+                }
                 //Параметр Имя лошади
                 sqlCommand.Parameters.Add("@horseName", DbType.String).Value = horseName;
 
@@ -256,12 +271,6 @@ namespace Horse_Creator
 
                 //Выполняем запрос на чтение
                 SQLiteDataReader reader = sqlCommand.ExecuteReader();
-
-                //Завершаем выполнение команды
-                sqlCommand.Cancel();
-
-                //Закрываем соединение с базой данных
-                connect.Close();
 
                 List<Image> lImg = new List<Image>();
 
@@ -273,6 +282,12 @@ namespace Horse_Creator
                         lImg.Add(Image.FromStream(ImageStream));
                     }
                 }
+
+                //Завершаем выполнение команды
+                sqlCommand.Cancel();
+
+                //Закрываем соединение с базой данных
+                connect.Close();
 
                 reader.Close();
 
