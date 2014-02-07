@@ -299,5 +299,45 @@ namespace Horse_Creator
                 return null;
             }
         }
+
+        /// <summary>
+        /// Получает из базы описание лошади по её имени
+        /// </summary>
+        /// <param name="horseName">Имя лошади</param>
+        /// <returns>Строка с описанием или null в случае ошибки</returns>
+        public String SelectHorseDescription(String horseName)
+        {
+            try
+            {
+                //Подготовим запрос к базе на сохранение
+                SQLiteCommand sqlCommand = new SQLiteCommand();
+                sqlCommand.Connection = connect;
+                sqlCommand.CommandType = CommandType.Text;
+
+                sqlCommand.CommandText = "SELECT horseDescription FROM horse WHERE horseName = @horseName;";
+
+                //Параметр Имя лошади
+                sqlCommand.Parameters.Add("@horseName", DbType.String).Value = horseName;
+
+                //Открываем соединение с базой данных
+                connect.Open();
+
+                //Выполняем запрос на чтение
+                String desc = (String)sqlCommand.ExecuteScalar();
+
+                //Завершаем выполнение команды
+                sqlCommand.Cancel();
+
+                //Закрываем соединение с базой данных
+                connect.Close();
+
+                return desc;
+            }
+            catch (SQLiteException e)
+            {
+                System.Windows.Forms.MessageBox.Show("Ошибка работы с базой данный. Текст ошибки(сообщите разработчику):" + e);
+                return null;
+            }
+        }
     }
 }
