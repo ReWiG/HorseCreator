@@ -184,6 +184,11 @@ namespace Horse_Creator
             return intID;
         }
 
+        /// <summary>
+        /// Получает картинку тела лошади
+        /// </summary>
+        /// <param name="horseName">Имя лошади</param>
+        /// <returns>Картинка тела</returns>
         public Image SelectImageColor(String horseName)
         {
             try
@@ -223,6 +228,55 @@ namespace Horse_Creator
                 {
                     return null; // Если нет картинки в базе
                 }
+            }
+            catch (SQLiteException e)
+            {
+                System.Windows.Forms.MessageBox.Show("Ошибка работы с базой данный. Текст ошибки(сообщите разработчику):" + e);
+                return null;
+            }
+        }
+
+        public List<Image> SelectImageMane(String horseName)
+        {
+            try
+            {
+                //Подготовим запрос к базе на сохранение
+                SQLiteCommand sqlCommand = new SQLiteCommand();
+                sqlCommand.Connection = connect;
+                sqlCommand.CommandType = CommandType.Text;
+
+                //Текст запроса
+                sqlCommand.CommandText = "SELECT maneImg FROM horseManeImg WHERE fkHorse = (SELECT horseId FROM horse WHERE horseName = @horseName);";
+
+                //Параметр Имя лошади
+                sqlCommand.Parameters.Add("@horseName", DbType.String).Value = horseName;
+
+                //Открываем соединение с базой данных
+                connect.Open();
+
+                //Выполняем запрос на чтение
+                SQLiteDataReader reader = sqlCommand.ExecuteReader();
+
+                //Завершаем выполнение команды
+                sqlCommand.Cancel();
+
+                //Закрываем соединение с базой данных
+                connect.Close();
+
+                List<Image> lImg = new List<Image>();
+
+                while (reader.Read())
+                {
+                    using (MemoryStream ImageStream = new MemoryStream((byte[])reader[0]))
+                    {
+                        //Создадим изображение из потока
+                        lImg.Add(Image.FromStream(ImageStream));
+                    }
+                }
+
+                reader.Close();
+
+                return lImg; // Если нет картинки в базе
             }
             catch (SQLiteException e)
             {
